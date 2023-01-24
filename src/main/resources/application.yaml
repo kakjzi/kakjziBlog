@@ -13,7 +13,8 @@ spring:
       pageable:
         one-indexed-parameters: true
         default-page-size: 5
-
+  mvc:
+    static-path-pattern: /static/**
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
@@ -23,3 +24,7 @@ spring:
         format_sql: true
         show_sql: true
     defer-datasource-initialization: true
+  web:
+    resources:
+      add-mappings: true
+      static-locations: classpath:/static/
