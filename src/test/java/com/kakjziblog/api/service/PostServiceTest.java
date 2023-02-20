@@ -1,5 +1,17 @@
 package com.kakjziblog.api.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import com.kakjziblog.api.domain.Post;
 import com.kakjziblog.api.exception.PostNotFound;
 import com.kakjziblog.api.repository.PostRepository;
@@ -7,17 +19,6 @@ import com.kakjziblog.api.request.PostCreate;
 import com.kakjziblog.api.request.PostEdit;
 import com.kakjziblog.api.request.PostSearch;
 import com.kakjziblog.api.response.PostResponse;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class PostServiceTest {
@@ -32,7 +33,6 @@ class PostServiceTest {
     void clean() {
         postRepository.deleteAll();
     }
-
     @Test
     @DisplayName("글 작성")
     void test1() {
@@ -72,6 +72,7 @@ class PostServiceTest {
         assertEquals("foo", post.getTitle());
         assertEquals("bar", post.getContent());
     }
+
 
 
     @Test

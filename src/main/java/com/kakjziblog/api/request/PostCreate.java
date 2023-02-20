@@ -1,13 +1,13 @@
 package com.kakjziblog.api.request;
 
+import javax.validation.constraints.NotBlank;
 
 import com.kakjziblog.api.exception.InvalidRequest;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import javax.validation.constraints.NotBlank;
 
 @Setter
 @Getter
