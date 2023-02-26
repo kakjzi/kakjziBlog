@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kakjziblog.api.request.Login;
+import com.kakjziblog.api.response.SessionResponse;
 import com.kakjziblog.api.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
@@ -18,9 +19,9 @@ public class AuthController {
 	private final AuthService authService;
 
 	@PostMapping("/auth/login")
-	public void login(@RequestBody Login login) {
+	public SessionResponse login(@RequestBody Login login) {
 		log.info(">> login {}", login);
 
-		authService.signIn(login);
+		return new SessionResponse(authService.signIn(login));
 	}
 }

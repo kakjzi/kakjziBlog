@@ -4,6 +4,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import com.kakjziblog.api.domain.Session;
 import com.kakjziblog.api.domain.Users;
 import com.kakjziblog.api.exception.InvalidSigninInformation;
 import com.kakjziblog.api.repository.UserRepository;
@@ -17,10 +18,11 @@ public class AuthService {
 	private final UserRepository userRepository;
 
 	@Transactional
-	public void signIn(Login login) {
+	public String signIn(Login login) {
 		Users users = userRepository.findByEmailAndPassword(login.getEmail(), login.getPassword())
 			.orElseThrow(InvalidSigninInformation::new);
 
-		users.addSession();
+		Session session = users.addSession();
+		return session.getAccessToken();
 	}
 }

@@ -93,4 +93,30 @@ class AuthControllerTest {
 
 		assertThat(loginUser.getSessions().size()).isEqualTo(1);
 	}
+	@Test
+	@Transactional
+	@DisplayName("로그인 성공 후 세션 응답")
+	void test3() throws Exception {
+		//given
+		Users user = userRepository.save(Users.builder()
+			.name("jiwoo")
+			.password("1234")
+			.email("jiwoo99@test.com")
+			.build());
+
+		Login login = Login.builder()
+			.email("jiwoo99@test.com")
+			.password("1234")
+			.build();
+
+		String json = objectMapper.writeValueAsString(login);
+
+		mockMvc.perform(post("/auth/login")
+				.contentType(APPLICATION_JSON)
+				.content(json)
+			)
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.accessToken").exists())
+			.andDo(print());
+	}
 }

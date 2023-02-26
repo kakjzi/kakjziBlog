@@ -31,11 +31,13 @@ public class Users {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	private List<Session> sessions = new ArrayList<>();
 
-	public void addSession() {
-		sessions.add(Session.builder()
-							.user(this)
-							.build()
-		);
+	public Session addSession() {
+		Session session =Session.builder()
+			.user(this)
+			.build();
+
+		sessions.add(session);
+		return session;
 	}
 
 	@Builder
