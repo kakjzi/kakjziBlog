@@ -1,9 +1,14 @@
 package com.kakjziblog.api.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kakjziblog.api.domain.Post;
-import com.kakjziblog.api.repository.PostRepository;
-import com.kakjziblog.api.request.PostCreate;
+import static org.springframework.http.MediaType.*;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.snippet.Attributes.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,15 +21,10 @@ import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.snippet.Attributes.key;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kakjziblog.api.domain.Post;
+import com.kakjziblog.api.repository.PostRepository;
+import com.kakjziblog.api.request.PostCreate;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -75,8 +75,9 @@ public class PostControllerDocTest {
         String json = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(post("/posts")
-                        .contentType(APPLICATION_JSON)
-                        .content(json))
+                    .header("authorization","jiwoo")
+                    .contentType(APPLICATION_JSON)
+                    .content(json))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("post-create",

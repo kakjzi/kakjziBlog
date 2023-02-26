@@ -1,16 +1,28 @@
 package com.kakjziblog.api.controller;
 
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.kakjziblog.api.config.data.UserSession;
 import com.kakjziblog.api.request.PostCreate;
 import com.kakjziblog.api.request.PostEdit;
 import com.kakjziblog.api.request.PostSearch;
 import com.kakjziblog.api.response.PostResponse;
 import com.kakjziblog.api.service.PostService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -19,12 +31,19 @@ public class PostController {
 
     private final PostService postService;
 
+    @GetMapping("/foo")
+    public Long foo(UserSession userSession) {
+        log.info(">> foo");
+        return userSession.id;
+    }
+
     @PostMapping("/posts")
-    public void get(@RequestBody @Valid PostCreate request) {
+    public void post(@RequestBody @Valid PostCreate request, @RequestHeader String authorization) {
 
         request.validate();
         postService.write(request);
     }
+
 
     /**
      * /posts -> 글 전체 조회(검색 + 페이징)

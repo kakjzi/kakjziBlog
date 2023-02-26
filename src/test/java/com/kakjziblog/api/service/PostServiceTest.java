@@ -80,11 +80,11 @@ class PostServiceTest {
     void test3() throws Exception {
         //given
         List<Post> requestPosts = IntStream.range(0, 20)
-                .mapToObj(i -> Post.builder()
-                        .title("지우 제목 -" + i)
-                        .content("포르쉐타자 - " + i)
-                        .build())
-                .collect(Collectors.toList());
+                                           .mapToObj(i -> Post.builder()
+                                           .title("지우 제목 -" + i)
+                                           .content("포르쉐타자 - " + i)
+                                           .build())
+                                           .collect(Collectors.toList());
         postRepository.saveAll(requestPosts);
         PostSearch postSearch = PostSearch.builder()
                 .build();
