@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kakjziblog.api.domain.Session;
 import com.kakjziblog.api.domain.Users;
 import com.kakjziblog.api.repository.SessionRepository;
 import com.kakjziblog.api.repository.UserRepository;
@@ -117,6 +118,44 @@ class AuthControllerTest {
 			)
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.accessToken").exists())
+			.andDo(print());
+	}
+	@Test
+	@DisplayName("로그인 성공 후 권한이 필요한 페이지 접속한다 /foo")
+	void test4() throws Exception {
+
+		Users user = Users.builder()
+			.name("jiwoo")
+			.password("1234")
+			.email("jiwoo99@test.com")
+			.build();
+
+		Session session = user.addSession();
+		userRepository.save(user);
+
+		mockMvc.perform(get("/foo")
+				.header("Authorization", session.getAccessToken())
+				.contentType(APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andDo(print());
+	}
+	@Test
+	@DisplayName("검증되지 않은 세션으로 권한이 필요한 페이지에 접속할 수 없음 /foo")
+	void test5() throws Exception {
+
+		Users user = Users.builder()
+			.name("jiwoo")
+			.password("1234")
+			.email("jiwoo99@test.com")
+			.build();
+
+		Session session = user.addSession();
+		userRepository.save(user);
+
+		mockMvc.perform(get("/foo")
+				.header("Authorization", session.getAccessToken() + "error!!")
+				.contentType(APPLICATION_JSON))
+			.andExpect(status().isUnauthorized())
 			.andDo(print());
 	}
 }

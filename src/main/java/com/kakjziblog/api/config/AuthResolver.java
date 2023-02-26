@@ -7,9 +7,16 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.kakjziblog.api.config.data.UserSession;
+import com.kakjziblog.api.domain.Session;
 import com.kakjziblog.api.exception.Unauthorized;
+import com.kakjziblog.api.repository.SessionRepository;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class AuthResolver implements HandlerMethodArgumentResolver {
+
+	private final SessionRepository sessionRepository;
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
 		return parameter.getParameterType().equals(UserSession.class);
@@ -19,12 +26,13 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
-		String accessToken = webRequest.getHeader("accessToken");
-		if(accessToken == null || !accessToken.equals("")) {
+		String accessToken = webRequest.getHeader("Authorization");
+		if(accessToken == null || accessToken.equals("")) {
 			throw new Unauthorized();
 		}
+		Session session = sessionRepository.findByAccessToken(accessToken)
+			.orElseThrow(Unauthorized::new);
 
-
-		return new UserSession(1L);
+		return new UserSession(session.getUser().getId());
 	}
 }
