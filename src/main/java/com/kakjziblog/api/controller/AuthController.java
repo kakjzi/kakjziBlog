@@ -1,11 +1,15 @@
 package com.kakjziblog.api.controller;
 
+import java.time.Duration;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kakjziblog.api.request.Login;
-import com.kakjziblog.api.response.SessionResponse;
 import com.kakjziblog.api.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
@@ -19,9 +23,22 @@ public class AuthController {
 	private final AuthService authService;
 
 	@PostMapping("/auth/login")
-	public SessionResponse login(@RequestBody Login login) {
+	public ResponseEntity<Object> login(@RequestBody Login login) {
 		log.info(">> login {}", login);
+		String accessToken = authService.signIn(login);
+		ResponseCookie cookie = ResponseCookie.from("SESSION", accessToken)
+											  .domain("localhost") // ToDo : 서버 환경에 따른 분리 필요
+											  .path("/")
+											  .httpOnly(true)
+											  .secure(false)
+											  .maxAge(Duration.ofDays(30))
+											  .sameSite("Strict")
+											  .build();
 
-		return new SessionResponse(authService.signIn(login));
+		log.info(">> cookie {}", cookie);
+
+		return ResponseEntity.ok()
+							 .header(HttpHeaders.SET_COOKIE, cookie.toString())
+							 .build();
 	}
 }
