@@ -20,9 +20,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	// 		.excludePathPatterns("/error", "favicon.ico");
 	// }
 	private final SessionRepository sessionRepository;
+	private final AppConfig appConfig;
 
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-		resolvers.add(new AuthResolver(sessionRepository));
+		resolvers.add(new AuthResolver(sessionRepository, appConfig));
 	}
 }

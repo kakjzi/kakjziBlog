@@ -29,3 +29,6 @@ spring:
     resources:
       add-mappings: true
       static-locations: classpath:/static/
+
+jiwoo:
+  key: "FcvuSVEJz2Iyop2Jv0IcWAfcwYDQCTf7amAqxHgyAHg="
