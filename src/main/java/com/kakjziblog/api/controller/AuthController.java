@@ -1,17 +1,19 @@
 package com.kakjziblog.api.controller;
 
-import java.time.Duration;
+import java.util.Base64;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
+import javax.crypto.SecretKey;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kakjziblog.api.request.Login;
+import com.kakjziblog.api.response.SessionResponse;
 import com.kakjziblog.api.service.AuthService;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,24 +23,21 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthController {
 
 	private final AuthService authService;
+	private static final String KEY = "FcvuSVEJz2Iyop2Jv0IcWAfcwYDQCTf7amAqxHgyAHg=";
 
 	@PostMapping("/auth/login")
-	public ResponseEntity<Object> login(@RequestBody Login login) {
+	public SessionResponse login(@RequestBody Login login) {
 		log.info(">> login {}", login);
-		String accessToken = authService.signIn(login);
-		ResponseCookie cookie = ResponseCookie.from("SESSION", accessToken)
-											  .domain("localhost") // ToDo : 서버 환경에 따른 분리 필요
-											  .path("/")
-											  .httpOnly(true)
-											  .secure(false)
-											  .maxAge(Duration.ofDays(30))
-											  .sameSite("Strict")
-											  .build();
+		Long userId = authService.signIn(login);
 
-		log.info(">> cookie {}", cookie);
+		SecretKey secretKey = Keys.hmacShaKeyFor(Base64.getDecoder()
+													   .decode(KEY));
 
-		return ResponseEntity.ok()
-							 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-							 .build();
+		String jws = Jwts.builder()
+						 .setSubject(String.valueOf(userId))
+						 .signWith(secretKey)
+						 .compact();
+
+		return new SessionResponse(jws);
 	}
 }

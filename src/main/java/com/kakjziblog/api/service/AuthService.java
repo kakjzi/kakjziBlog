@@ -18,11 +18,11 @@ public class AuthService {
 	private final UserRepository userRepository;
 
 	@Transactional
-	public String signIn(Login login) {
+	public Long signIn(Login login) {
 		Users users = userRepository.findByEmailAndPassword(login.getEmail(), login.getPassword())
 			.orElseThrow(InvalidSigninInformation::new);
 
 		Session session = users.addSession();
-		return session.getAccessToken();
+		return users.getId();
 	}
 }
