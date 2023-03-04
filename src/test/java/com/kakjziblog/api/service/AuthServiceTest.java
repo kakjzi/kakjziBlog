@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.kakjziblog.api.crypto.PasswordEncoder;
 import com.kakjziblog.api.domain.Users;
@@ -17,12 +18,14 @@ import com.kakjziblog.api.repository.UserRepository;
 import com.kakjziblog.api.request.Login;
 import com.kakjziblog.api.request.Signup;
 
+@ActiveProfiles("test")
 @SpringBootTest
 class AuthServiceTest {
 
 	@Autowired private UserRepository userRepository;
 
 	@Autowired private AuthService authService;
+	@Autowired private PasswordEncoder encoder;
 
 	@BeforeEach
 	void clean() {
@@ -32,7 +35,6 @@ class AuthServiceTest {
 	@Test
 	@DisplayName("회원가입 성공")
 	void test1() {
-		PasswordEncoder encoder = new PasswordEncoder();
 		//given
 		Signup signup = Signup.builder()
 							  .name("jiwoo")
@@ -78,7 +80,6 @@ class AuthServiceTest {
 	@DisplayName("로그인 성공")
 	void test3() {
 		//given
-		PasswordEncoder encoder = new PasswordEncoder();
 		String encryptedPassword = encoder.encrypt("1234");
 
 		Users user = Users.builder()
@@ -102,7 +103,6 @@ class AuthServiceTest {
 	@DisplayName("비번 틀림")
 	void test4() {
 		//given
-		PasswordEncoder encoder = new PasswordEncoder();
 		String encryptedPassword = encoder.encrypt("1234");
 
 		Signup signup = Signup.builder()

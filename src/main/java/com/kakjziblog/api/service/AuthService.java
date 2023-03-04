@@ -18,13 +18,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthService {
 	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
 
 	@Transactional
 	public Long signIn(Login login) {
 		Users user = userRepository.findByEmail(login.getEmail())
 									 .orElseThrow(InvalidSigninInformation::new);
 
-		PasswordEncoder passwordEncoder = new PasswordEncoder();
 
 		boolean matches = passwordEncoder.matches(login.getPassword(), user.getPassword());
 		if(!matches) {
@@ -40,8 +40,7 @@ public class AuthService {
 				throw new AlreadyExistsEmailException();
 			});
 
-		PasswordEncoder encoder = new PasswordEncoder();
-		String encryptedPassword = encoder.encrypt(signup.getPassword());
+		String encryptedPassword = passwordEncoder.encrypt(signup.getPassword());
 
 		Users users = Users.builder()
 						   .email(signup.getEmail())
