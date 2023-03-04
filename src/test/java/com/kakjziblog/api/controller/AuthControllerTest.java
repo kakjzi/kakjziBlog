@@ -158,4 +158,23 @@ class AuthControllerTest {
 			.andExpect(status().isUnauthorized())
 			.andDo(print());
 	}
+	@Test
+	@DisplayName("회원가입")
+	void test6() throws Exception {
+
+		Users user = Users.builder()
+			.name("jiwoo")
+			.password("1234")
+			.email("jiwoo99@test.com")
+			.build();
+
+		Session session = user.addSession();
+		userRepository.save(user);
+
+		mockMvc.perform(get("/foo")
+				.header("Authorization", session.getAccessToken() + "error!!")
+				.contentType(APPLICATION_JSON))
+			.andExpect(status().isUnauthorized())
+			.andDo(print());
+	}
 }

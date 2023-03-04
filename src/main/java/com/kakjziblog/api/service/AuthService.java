@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.kakjziblog.api.domain.Session;
 import com.kakjziblog.api.domain.Users;
+import com.kakjziblog.api.exception.AlreadyExistsEmailException;
 import com.kakjziblog.api.exception.InvalidSigninInformation;
 import com.kakjziblog.api.repository.UserRepository;
 import com.kakjziblog.api.request.Login;
@@ -28,6 +29,11 @@ public class AuthService {
 	}
 
 	public void signup(Signup signup) {
+		userRepository.findByEmail(signup.getEmail())
+			.ifPresent(user -> {
+				throw new AlreadyExistsEmailException();
+			});
+
 		Users users = Users.builder()
 			.email(signup.getEmail())
 			.name(signup.getName())
