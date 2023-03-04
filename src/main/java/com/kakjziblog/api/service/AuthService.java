@@ -4,7 +4,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import com.kakjziblog.api.domain.Session;
+import com.kakjziblog.api.crypto.PasswordEncoder;
 import com.kakjziblog.api.domain.Users;
 import com.kakjziblog.api.exception.AlreadyExistsEmailException;
 import com.kakjziblog.api.exception.InvalidSigninInformation;
@@ -21,11 +21,17 @@ public class AuthService {
 
 	@Transactional
 	public Long signIn(Login login) {
-		Users users = userRepository.findByEmailAndPassword(login.getEmail(), login.getPassword())
-			.orElseThrow(InvalidSigninInformation::new);
+		Users user = userRepository.findByEmail(login.getEmail())
+									 .orElseThrow(InvalidSigninInformation::new);
 
-		Session session = users.addSession();
-		return users.getId();
+		PasswordEncoder passwordEncoder = new PasswordEncoder();
+
+		boolean matches = passwordEncoder.matches(login.getPassword(), user.getPassword());
+		if(!matches) {
+			throw new InvalidSigninInformation();
+		}
+
+		return user.getId();
 	}
 
 	public void signup(Signup signup) {
@@ -34,11 +40,14 @@ public class AuthService {
 				throw new AlreadyExistsEmailException();
 			});
 
+		PasswordEncoder encoder = new PasswordEncoder();
+		String encryptedPassword = encoder.encrypt(signup.getPassword());
+
 		Users users = Users.builder()
-			.email(signup.getEmail())
-			.name(signup.getName())
-			.password(signup.getPassword())
-			.build();
+						   .email(signup.getEmail())
+						   .name(signup.getName())
+						   .password(encryptedPassword)
+						   .build();
 
 		userRepository.save(users);
 	}
