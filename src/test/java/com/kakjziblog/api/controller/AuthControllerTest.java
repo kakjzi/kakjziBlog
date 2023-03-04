@@ -22,6 +22,7 @@ import com.kakjziblog.api.domain.Users;
 import com.kakjziblog.api.repository.SessionRepository;
 import com.kakjziblog.api.repository.UserRepository;
 import com.kakjziblog.api.request.Login;
+import com.kakjziblog.api.request.Signup;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -162,19 +163,16 @@ class AuthControllerTest {
 	@DisplayName("회원가입")
 	void test6() throws Exception {
 
-		Users user = Users.builder()
-			.name("jiwoo")
-			.password("1234")
-			.email("jiwoo99@test.com")
-			.build();
+		Signup signup = Signup.builder()
+							  .name("jiwoo")
+							  .password("1234")
+							  .email("jiwoo00@naver.com")
+							  .build();
 
-		Session session = user.addSession();
-		userRepository.save(user);
-
-		mockMvc.perform(get("/foo")
-				.header("Authorization", session.getAccessToken() + "error!!")
-				.contentType(APPLICATION_JSON))
-			.andExpect(status().isUnauthorized())
-			.andDo(print());
+		mockMvc.perform(post("/auth/signup")
+				   .content(objectMapper.writeValueAsString(signup))
+				   .contentType(APPLICATION_JSON))
+			   .andExpect(status().isOk())
+			   .andDo(print());
 	}
 }
