@@ -9,6 +9,7 @@ import com.kakjziblog.api.domain.Users;
 import com.kakjziblog.api.exception.InvalidSigninInformation;
 import com.kakjziblog.api.repository.UserRepository;
 import com.kakjziblog.api.request.Login;
+import com.kakjziblog.api.request.Signup;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,5 +25,15 @@ public class AuthService {
 
 		Session session = users.addSession();
 		return users.getId();
+	}
+
+	public void signup(Signup signup) {
+		Users users = Users.builder()
+			.email(signup.getEmail())
+			.name(signup.getName())
+			.password(signup.getPassword())
+			.build();
+
+		userRepository.save(users);
 	}
 }

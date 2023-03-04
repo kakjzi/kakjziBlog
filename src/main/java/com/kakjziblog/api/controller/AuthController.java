@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kakjziblog.api.config.AppConfig;
 import com.kakjziblog.api.request.Login;
+import com.kakjziblog.api.request.Signup;
 import com.kakjziblog.api.response.SessionResponse;
 import com.kakjziblog.api.service.AuthService;
 
@@ -41,4 +42,10 @@ public class AuthController {
 
 		return new SessionResponse(jws);
 	}
+
+	@PostMapping("/auth/signup")
+	public void signup(@RequestBody Signup signup) {
+		authService.signup(signup);
+	}
 }
+
