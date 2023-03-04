@@ -1,6 +1,5 @@
 package com.kakjziblog.api.config;
 
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -22,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AuthResolver implements HandlerMethodArgumentResolver {
 
-	private static final String KEY = "FcvuSVEJz2Iyop2Jv0IcWAfcwYDQCTf7amAqxHgyAHg=";
 	private final SessionRepository sessionRepository;
 	private final AppConfig appConfig;
 
@@ -43,12 +41,11 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
 		if (jws == null || jws.equals("")) {
 			throw new Unauthorized();
 		}
-		byte[] decodeKey = Base64.decodeBase64(KEY);
 
 		try {
 
 			Jws<Claims> claimsJws = Jwts.parserBuilder()
-										.setSigningKey(decodeKey)
+										.setSigningKey(appConfig.getJwtKey())
 										.build()
 										.parseClaimsJws(jws);
 
