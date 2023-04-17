@@ -1,7 +1,9 @@
 package com.kakjziblog.api.request;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
+import com.kakjziblog.api.domain.Category;
 import com.kakjziblog.api.exception.InvalidRequest;
 
 import lombok.Builder;
@@ -20,12 +22,16 @@ public class PostCreate {
     @NotBlank(message = "내용을 입력해주세요.")
     private String content;
 
+    @NotNull(message = "카테고리를 입력해주세요.")
+    private Category category;
+
     public PostCreate() {
     }
     @Builder
-    public PostCreate(String title, String content) {
+    public PostCreate(String title, String content, Category category) {
         this.title = title;
         this.content = content;
+        this.category = category;
     }
 
     public void validate() {

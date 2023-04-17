@@ -1,10 +1,15 @@
 package com.kakjziblog.api.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kakjziblog.api.domain.Post;
-import com.kakjziblog.api.repository.PostRepository;
-import com.kakjziblog.api.request.PostCreate;
-import com.kakjziblog.api.request.PostEdit;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.http.MediaType.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,15 +18,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kakjziblog.api.domain.Category;
+import com.kakjziblog.api.domain.Post;
+import com.kakjziblog.api.repository.PostRepository;
+import com.kakjziblog.api.request.PostCreate;
+import com.kakjziblog.api.request.PostEdit;
 
 //@WebMvcTest
 @SpringBootTest
@@ -52,6 +54,7 @@ class PostControllerTest {
         PostCreate requeset = PostCreate.builder()
                                         .title("제목입니다.")
                                         .content("내용입니다.")
+                                        .category(Category.DEVELOP)
                                         .build();
 
         String json = objectMapper.writeValueAsString(requeset);
