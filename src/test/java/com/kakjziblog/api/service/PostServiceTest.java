@@ -1,5 +1,6 @@
 package com.kakjziblog.api.service;
 
+import static com.kakjziblog.api.domain.Category.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
@@ -36,10 +37,11 @@ class PostServiceTest {
 	@DisplayName("글 작성")
 	void test1() {
 		//given
-		PostCreate postCreate = PostCreate.builder()
-										  .title("제목입니다.")
-										  .content("내용입니다.")
-										  .build();
+        PostCreate postCreate = PostCreate.builder()
+                                          .title("제목입니다.")
+                                          .content("내용입니다.")
+                                          .category(DEVELOP)
+                                          .build();
 		//when
 		postService.write(postCreate);
 
@@ -50,16 +52,18 @@ class PostServiceTest {
 								  .get(0);
 		assertEquals("제목입니다.", post.getTitle());
 		assertEquals("내용입니다.", post.getContent());
+        assertEquals(DEVELOP, post.getCategory());
 	}
 
 	@Test
 	@DisplayName("글 1개 조회")
 	void test2() throws Exception {
 		//given
-		Post requestPost = Post.builder()
-							   .title("foo")
-							   .content("bar")
-							   .build();
+        Post requestPost = Post.builder()
+                               .title("foo")
+                               .content("bar")
+                               .category(DEVELOP)
+                               .build();
 
 		postRepository.save(requestPost);
 
@@ -70,18 +74,20 @@ class PostServiceTest {
 		assertNotNull(post);
 		assertEquals("foo", post.getTitle());
 		assertEquals("bar", post.getContent());
+        assertEquals(DEVELOP, post.getCategory());
 	}
 
 	@Test
 	@DisplayName("글 1페이지 조회")
 	void test3() throws Exception {
 		//given
-		List<Post> requestPosts = IntStream.range(0, 20)
-										   .mapToObj(i -> Post.builder()
-															  .title("지우 제목 -" + i)
-															  .content("포르쉐타자 - " + i)
-															  .build())
-										   .collect(Collectors.toList());
+        List<Post> requestPosts = IntStream.range(0, 20)
+                                           .mapToObj(i -> Post.builder()
+                                                              .title("지우 제목 -" + i)
+                                                              .content("포르쉐타자 - " + i)
+                                                              .category(DEVELOP)
+                                                              .build())
+                                           .collect(Collectors.toList());
 		postRepository.saveAll(requestPosts);
 		PostSearch postSearch = PostSearch.builder()
 										  .build();
@@ -91,8 +97,8 @@ class PostServiceTest {
 
 		//then
 		assertEquals(10L, list.size());
-		assertEquals("지우 제목 -19", list.get(0)
-									  .getTitle());
+		assertEquals("지우 제목 -19", list.get(0).getTitle());
+        assertEquals(DEVELOP, list.get(0).getCategory());
 	}
 
 	@Test

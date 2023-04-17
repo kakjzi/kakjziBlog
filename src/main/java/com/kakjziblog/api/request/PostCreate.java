@@ -1,5 +1,6 @@
 package com.kakjziblog.api.request;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 

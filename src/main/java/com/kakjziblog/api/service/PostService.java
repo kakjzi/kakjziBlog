@@ -1,5 +1,11 @@
 package com.kakjziblog.api.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.kakjziblog.api.domain.Post;
 import com.kakjziblog.api.domain.PostEditor;
 import com.kakjziblog.api.exception.PostNotFound;
@@ -8,13 +14,9 @@ import com.kakjziblog.api.request.PostCreate;
 import com.kakjziblog.api.request.PostEdit;
 import com.kakjziblog.api.request.PostSearch;
 import com.kakjziblog.api.response.PostResponse;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,9 +27,10 @@ public class PostService {
 
     public void write(PostCreate postCreate){
         Post post = Post.builder()
-                .title(postCreate.getTitle())
-                .content(postCreate.getContent())
-                .build();
+                        .title(postCreate.getTitle())
+                        .content(postCreate.getContent())
+                        .category(postCreate.getCategory())
+                        .build();
 
         postRepository.save(post);
     }
