@@ -2,6 +2,7 @@
 import {onMounted, ref} from "vue";
 import axios from "axios";
 import {useRouter} from "vue-router";
+import {ElMessage} from "element-plus";
 
 const props = defineProps({
   postId: {
@@ -25,6 +26,13 @@ onMounted(() => {
     post.value = res.data;
   });
 });
+
+const moveToDelete = () => {
+    axios.delete(`/api/posts/${props.postId}`).then(() => {
+        router.replace({name: "home"});
+        ElMessage.success('삭제되었습니다.');
+    });
+};
 </script>
 
 <template>
@@ -48,6 +56,7 @@ onMounted(() => {
   <el-row class="mt-3">
     <el-col>
       <div class="d-flex justify-content-end">
+        <el-button type="danger" @click="moveToDelete()">삭제</el-button>
         <el-button type="warning" @click="moveToEdit()">수정</el-button>
       </div>
     </el-col>
