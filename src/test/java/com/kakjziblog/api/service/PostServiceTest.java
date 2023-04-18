@@ -222,4 +222,31 @@ class PostServiceTest {
 			postService.edit(post.getId() + 1L, edit);
 		});
 	}
+    @Test
+    @DisplayName("게시글 카테고리 수정")
+    void test11() throws Exception {
+        //given
+        Post post = Post.builder()
+                        .title("지우")
+                        .content("모닝")
+                        .category(DEVELOP)
+                        .build();
+
+        postRepository.save(post);
+        PostEdit edit = PostEdit.builder()
+                                .title("지우와 반포자이")
+                                .content("포르쉐")
+                                .category(LIFE)
+                                .build();
+        //when
+        postService.edit(post.getId(), edit);
+
+        //then
+        Post changedPost = postRepository.findById(post.getId())
+                                         .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id=" + post.getId()));
+
+        assertEquals("지우와 반포자이", changedPost.getTitle());
+        assertEquals("포르쉐", changedPost.getContent());
+        assertEquals(LIFE, changedPost.getCategory());
+    }
 }

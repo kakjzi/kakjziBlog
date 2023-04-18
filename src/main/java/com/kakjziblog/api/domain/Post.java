@@ -55,6 +55,7 @@ public class Post {
     public void edit(PostEditor postEditor) {
         this.title = postEditor.getTitle();
         this.content = postEditor.getContent();
+        this.category = postEditor.getCategory();
         this.updatedAt = LocalDateTime.now();
     }
 }
