@@ -117,9 +117,10 @@ class PostControllerTest {
 
         //given
         Post post = Post.builder()
-                .title("123456789012345")
-                .content("bar")
-                .build();
+                        .title("123456789012345")
+                        .content("bar")
+                        .category(Category.DEVELOP)
+                        .build();
         postRepository.save(post);
 
         //expected
@@ -129,9 +130,9 @@ class PostControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(post.getId()))
                 .andExpect(jsonPath("$.title").value("123456789012345"))
-                .andExpect(jsonPath("$.content").value("bar"))
+               .andExpect(jsonPath("$.content").value("bar"))
+               .andExpect(jsonPath("$.category").value("DEVELOP"))
                 .andDo(print());
-
     }
 
     @Test
