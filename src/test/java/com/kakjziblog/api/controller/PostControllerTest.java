@@ -212,9 +212,10 @@ class PostControllerTest {
     void test8() throws Exception {
         //given
         Post post = Post.builder()
-                .title("지우")
-                .content("모닝")
-                .build();
+                        .title("지우")
+                        .content("모닝")
+                        .category(Category.DEVELOP)
+                        .build();
         postRepository.save(post);
 
         //expected
@@ -241,9 +242,10 @@ class PostControllerTest {
     void test10() throws Exception {
         //given
         PostEdit edit = PostEdit.builder()
-                .title("지우와 반포자이")
-                .content("모닝")
-                .build();
+                                .title("지우와 반포자이")
+                                .content("모닝")
+                                .category(Category.DEVELOP)
+                                .build();
 
         //expected
         mockMvc.perform(patch("/posts/{postId}", 1L)
@@ -258,9 +260,10 @@ class PostControllerTest {
     void test11() throws Exception {
         //given
         PostCreate requeset = PostCreate.builder()
-                .title("나는 바보입니다.")
-                .content("내용입니다.")
-                .build();
+                                        .title("나는 바보입니다.")
+                                        .content("내용입니다.")
+                                        .category(Category.DEVELOP)
+                                        .build();
 
         String json = objectMapper.writeValueAsString(requeset);
 
