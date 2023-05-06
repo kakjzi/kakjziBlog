@@ -6,8 +6,8 @@ import {useRouter} from "vue-router";
 const posts =ref([]);
 const router = useRouter();
 
-axios.get("/api/posts?page=1&size=5").then((res)=>{
-  res.data.forEach((r: any)=> {
+axios.get("/api/posts?page=1&size=5").then((res) => {
+  res.data.forEach((r: any) => {
     posts.value.push(r);
   });
 });
@@ -26,7 +26,9 @@ axios.get("/api/posts?page=1&size=5").then((res)=>{
       </div>
 
       <div class="d-flex sub">
-        <div class="category">개발</div>
+        <div class="category">
+          {{post.category}}
+        </div>
         <div class="regDate">2023.02.20</div>
       </div>
     </li>
