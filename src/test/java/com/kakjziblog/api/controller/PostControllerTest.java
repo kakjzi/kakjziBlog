@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kakjziblog.api.domain.Category;
 import com.kakjziblog.api.domain.Post;
 import com.kakjziblog.api.repository.PostRepository;
 import com.kakjziblog.api.request.PostCreate;
@@ -141,11 +142,12 @@ class PostControllerTest {
     void test5() throws Exception {
         //given
         List<Post> requestPosts = IntStream.range(0, 20)
-                .mapToObj(i -> Post.builder()
-                        .title("지우 제목 -" + i)
-                        .content("포르쉐타자 - " + i)
-                        .build())
-                .collect(Collectors.toList());
+                                           .mapToObj(i -> Post.builder()
+                                                              .title("지우 제목 -" + i)
+                                                              .content("포르쉐타자 - " + i)
+                                                              .category(DEVELOP)
+                                                              .build())
+                                           .collect(Collectors.toList());
         postRepository.saveAll(requestPosts);
 
         //expected
@@ -162,11 +164,12 @@ class PostControllerTest {
     void test6() throws Exception {
         //given
         List<Post> requestPosts = IntStream.range(0, 20)
-                .mapToObj(i -> Post.builder()
-                        .title("지우 제목 -" + i)
-                        .content("포르쉐타자 - " + i)
-                        .build())
-                .collect(Collectors.toList());
+                                           .mapToObj(i -> Post.builder()
+                                                              .title("지우 제목 -" + i)
+                                                              .content("포르쉐타자 - " + i)
+                                                              .category(DEVELOP)
+                                                              .build())
+                                           .collect(Collectors.toList());
         postRepository.saveAll(requestPosts);
 
         //expected
@@ -183,15 +186,17 @@ class PostControllerTest {
     void test7() throws Exception {
         //given
         Post post = Post.builder()
-                .title("지우")
-                .content("모닝")
-                .build();
+                        .title("지우")
+                        .content("모닝")
+                        .category(Category.DEVELOP)
+                        .build();
         postRepository.save(post);
 
         PostEdit edit = PostEdit.builder()
-                .title("지우와 반포자이")
-                .content("모닝")
-                .build();
+                                .title("지우와 반포자이")
+                                .content("모닝")
+                                .category(Category.DEVELOP)
+                                .build();
 
         //expected
         mockMvc.perform(patch("/posts/{postId}", post.getId())

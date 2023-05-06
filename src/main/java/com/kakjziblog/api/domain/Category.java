@@ -3,6 +3,7 @@ package com.kakjziblog.api.domain;
 import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,6 +14,8 @@ public enum Category {
 	TRAVEL("여행");
 
 	private final String name;
+
+	@JsonValue
 	public String getName() {
 		return name;
 	}
