@@ -1,5 +1,6 @@
 package com.kakjziblog.api.controller;
 
+import static com.kakjziblog.api.domain.Category.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -19,7 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kakjziblog.api.domain.Category;
 import com.kakjziblog.api.domain.Post;
 import com.kakjziblog.api.repository.PostRepository;
 import com.kakjziblog.api.request.PostCreate;
@@ -54,7 +54,7 @@ class PostControllerTest {
         PostCreate requeset = PostCreate.builder()
                                         .title("제목입니다.")
                                         .content("내용입니다.")
-                                        .category(Category.DEVELOP)
+                                        .category(DEVELOP)
                                         .build();
 
         String json = objectMapper.writeValueAsString(requeset);
@@ -96,7 +96,7 @@ class PostControllerTest {
         //when
         mockMvc.perform(post("/posts")
                         .contentType(APPLICATION_JSON)
-                       .content("{\"title\": \"제목입니다.\", \"content\": \"내용입니다.\"}")
+                       .content("{\"title\": \"제목입니다.\", \"content\": \"내용입니다.\", \"category\": \"개발\"}")
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -106,6 +106,7 @@ class PostControllerTest {
         Post post = postRepository.findAll().get(0);
         assertEquals("제목입니다.", post.getTitle());
         assertEquals("내용입니다.", post.getContent());
+        assertEquals(DEVELOP, post.getCategory());
     }
 
     @Test
@@ -119,7 +120,7 @@ class PostControllerTest {
         Post post = Post.builder()
                         .title("123456789012345")
                         .content("bar")
-                        .category(Category.DEVELOP)
+                        .category(DEVELOP)
                         .build();
         postRepository.save(post);
 
@@ -130,8 +131,8 @@ class PostControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(post.getId()))
                 .andExpect(jsonPath("$.title").value("123456789012345"))
-               .andExpect(jsonPath("$.content").value("bar"))
-               .andExpect(jsonPath("$.category").value("DEVELOP"))
+                .andExpect(jsonPath("$.content").value("bar"))
+                .andExpect(jsonPath("$.category").value("개발"))
                 .andDo(print());
     }
 
