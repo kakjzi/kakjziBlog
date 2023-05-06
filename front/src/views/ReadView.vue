@@ -14,7 +14,8 @@ const props = defineProps({
 const post = ref({
   id: 0,
   title: "",
-  content: ""
+  content: "",
+  category: "",
 });
 
 const router = useRouter();
@@ -41,7 +42,7 @@ const moveToDelete = () => {
       <h2 class="title">{{ post.title }}</h2>
 
       <div class="d-flex sub">
-        <div class="category">개발</div>
+        <div class="category">{{ post.category }}</div>
         <div class="regDate">2023.02.20 23:22:00</div>
       </div>
     </el-col>

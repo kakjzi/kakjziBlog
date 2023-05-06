@@ -6,7 +6,8 @@ import {useRouter} from "vue-router";
 const post = ref({
   id: 0,
   title: "",
-  content: ""
+  content: "",
+  category: "",
 });
 
 const props = defineProps({
@@ -26,10 +27,39 @@ const edit = () =>{
     router.replace({name: "home"})
   });
 }
+const options = [
+  {
+    value: "개발",
+    label: "개발",
+  },
+  {
+    value: "일상",
+    label: "일상",
+  },
+  {
+    value: "여행",
+    label: "여행",
+  },
+];
 </script>
 <template>
   <div>
     <el-input v-model="post.title"/>
+  </div>
+  <div class="mt-2">
+    <el-select
+        v-model="post.category"
+        class="w-100"
+        placeholder="카테고리를 선택하세요"
+        size="large"
+    >
+      <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+      />
+    </el-select>
   </div>
   <div class="mt-2">
     <el-input v-model="post.content" type="textarea" rows="15"/>
