@@ -1,8 +1,12 @@
 package com.kakjziblog.api.service;
 
 import static com.kakjziblog.api.domain.Category.*;
+import static java.util.concurrent.TimeUnit.*;
+import static org.assertj.core.api.Assertions.*;
+import static org.awaitility.Awaitility.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -249,4 +253,58 @@ class PostServiceTest {
         assertEquals("포르쉐", changedPost.getContent());
         assertEquals(LIFE, changedPost.getCategory());
     }
+
+	@Test
+	@DisplayName("게시물 생성 시간")
+	void test12() {
+		//given
+		LocalDateTime now = LocalDateTime.now();
+		PostCreate postCreate = PostCreate.builder()
+										  .title("제목입니다.")
+										  .content("내용입니다.")
+										  .category(DEVELOP)
+										  .build();
+		//when
+		postService.write(postCreate);
+
+		//then
+		Post post = postRepository.findAll()
+								  .get(0);
+
+		System.out.println("post.getCreatedAt() = " + post.getCreatedAt()+ ", post.getUpdatedAt() = " + post.getUpdatedAt());
+
+		assertThat(post.getCreatedAt()).isAfter(now);
+		assertThat(post.getUpdatedAt()).isAfter(now);
+	}
+
+	@Test
+	@DisplayName("게시물 생성시간 과 수정 시간 비교")
+	void test13() throws InterruptedException {
+		// Given
+		Post post = Post.builder()
+						.title("지우")
+						.content("Morning")
+						.build();
+
+		postRepository.save(post);
+
+		PostEdit edit = PostEdit.builder()
+								.title("지우 반포")
+								.content("Porsche")
+								.build();
+
+		// When
+		postService.edit(post.getId(), edit);
+
+		//then
+		await().atMost(3, SECONDS)
+			   .untilAsserted(() -> {
+				   var changedPost = postRepository.findById(post.getId())
+													 .orElseThrow(() -> new RuntimeException("Post does not exist. id=" + post.getId()));
+
+				   assertThat(changedPost.getUpdatedAt()).isAfter(changedPost.getCreatedAt());
+				   System.out.println("changedPost.getCreatedAt() = " + changedPost.getCreatedAt());
+				   System.out.println("changedPost.getUpdateAt() = " + changedPost.getUpdatedAt());
+			   });
+	}
 }
