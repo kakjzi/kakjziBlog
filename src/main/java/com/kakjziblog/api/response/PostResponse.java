@@ -1,8 +1,9 @@
 package com.kakjziblog.api.response;
 
-import com.kakjziblog.api.domain.Category;
+import java.time.LocalDateTime;
+
 import com.kakjziblog.api.domain.Post;
-import lombok.Builder;
+
 import lombok.Getter;
 
 /**
@@ -15,6 +16,7 @@ public class PostResponse {
     private final String title;
     private final String content;
     private final String category;
+    private final LocalDateTime lastUpdateDate;
 
     //생성자 오버로딩
     public PostResponse(Post post) {
@@ -22,13 +24,6 @@ public class PostResponse {
         this.title = post.getTitle();
         this.content = post.getContent();
         this.category = post.getCategory().getName();
-    }
-
-    @Builder
-    public PostResponse(Long id, String title, String content, Category category) {
-        this.id = id;
-        this.title = title.substring(0, Math.min(title.length(), 10));
-        this.content = content;
-        this.category = category.getName();
+        this.lastUpdateDate = post.getUpdatedAt();
     }
 }

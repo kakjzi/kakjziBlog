@@ -2,15 +2,21 @@
 import axios from "axios";
 import {ref} from "vue";
 import {useRouter} from "vue-router";
+import { format } from "date-fns";
+import { ko } from "date-fns/locale";
+
 
 const posts =ref([]);
 const router = useRouter();
 
 axios.get("/api/posts?page=1&size=5").then((res) => {
   res.data.forEach((r: any) => {
+    const formattedDate = format(new Date(r.lastUpdateDate), "yyyy년 MM월 dd일 HH:mm:ss", { locale: ko });
+    r.lastUpdateDate = formattedDate;
     posts.value.push(r);
   });
 });
+
 </script>
 
 <template>
@@ -29,7 +35,7 @@ axios.get("/api/posts?page=1&size=5").then((res) => {
         <div class="category">
           {{post.category}}
         </div>
-        <div class="regDate">2023.02.20</div>
+        <div class="regDate"> {{ post.lastUpdateDate }}</div>
       </div>
     </li>
   </ul>

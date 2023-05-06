@@ -78,7 +78,7 @@ class PostServiceTest {
 		assertNotNull(post);
 		assertEquals("foo", post.getTitle());
 		assertEquals("bar", post.getContent());
-        assertEquals(DEVELOP, post.getCategory());
+        assertEquals("개발", post.getCategory());
 	}
 
 	@Test
@@ -102,7 +102,7 @@ class PostServiceTest {
 		//then
 		assertEquals(10L, list.size());
 		assertEquals("지우 제목 -19", list.get(0).getTitle());
-        assertEquals(DEVELOP, list.get(0).getCategory());
+        assertEquals("개발", list.get(0).getCategory());
 	}
 
 	@Test

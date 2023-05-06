@@ -3,6 +3,8 @@ import {onMounted, ref} from "vue";
 import axios from "axios";
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 
 const props = defineProps({
   postId: {
@@ -16,6 +18,7 @@ const post = ref({
   title: "",
   content: "",
   category: "",
+  lastUpdateDate: ""
 });
 
 const router = useRouter();
@@ -25,6 +28,11 @@ const moveToEdit = () => {
 onMounted(() => {
   axios.get(`/api/posts/${props.postId}`).then((res) => {
     post.value = res.data;
+    post.value.lastUpdateDate = format(
+        new Date(res.data.lastUpdateDate),
+        'yyyy년 MM월 dd일 HH:mm:ss',
+        { locale: ko }
+    );
   });
 });
 
@@ -43,7 +51,7 @@ const moveToDelete = () => {
 
       <div class="d-flex sub">
         <div class="category">{{ post.category }}</div>
-        <div class="regDate">2023.02.20 23:22:00</div>
+        <div class="regDate">{{ post.lastUpdateDate }}</div>
       </div>
     </el-col>
   </el-row>
