@@ -23,7 +23,7 @@ public class PostEdit {
     @NotBlank(message = "내용을 입력해주세요.")
     private String content;
 
-    @NotNull(message = "카테고리를 입력해주세요.")
+    @NotNull(message = "유효한 카테고리를 입력해주세요.")
     private Category category;
 
     @Builder

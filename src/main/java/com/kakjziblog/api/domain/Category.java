@@ -27,8 +27,9 @@ public enum Category {
 	@JsonCreator
 	public static Category from(String s) {
 		return Arrays.stream(Category.values())
-					 .filter(category -> category.getName().equals(s))
+					 .filter(category -> category.getName()
+												 .equals(s.toUpperCase()))
 					 .findFirst()
-					 .orElseThrow(() -> new IllegalArgumentException("Invalid category name: " + s));
+					 .orElse(null);
 	}
 }

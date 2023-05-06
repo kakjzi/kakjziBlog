@@ -1,6 +1,5 @@
 package com.kakjziblog.api.request;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -23,7 +22,7 @@ public class PostCreate {
     @NotBlank(message = "내용을 입력해주세요.")
     private String content;
 
-    @NotNull(message = "카테고리를 입력해주세요.")
+    @NotNull(message = "유효한 카테고리를 입력해주세요.")
     private Category category;
 
     public PostCreate() {

@@ -273,4 +273,24 @@ class PostControllerTest {
                 .andExpect(status().isBadRequest())
                 .andDo(print());
     }
+    @Test
+    @DisplayName("카테고리 NULL일 경우 오류발생")
+    void test12() throws Exception {
+        //given
+        PostCreate requeset = PostCreate.builder()
+                                        .title("나는 바보입니다.")
+                                        .content("내용입니다.")
+                                        .category(null)
+                                        .build();
+
+        String json = objectMapper.writeValueAsString(requeset);
+        mockMvc.perform(post("/posts")
+                   .contentType(APPLICATION_JSON)
+                   .content(json))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$.code").value("400"))
+               .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+               .andExpect(jsonPath("$.validation.category").value("유효한 카테고리를 입력해주세요."))
+               .andDo(print());
+    }
 }
