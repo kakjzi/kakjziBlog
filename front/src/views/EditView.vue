@@ -9,11 +9,12 @@ const post = ref({
   content: "",
   category: "",
 });
+const errors = ref({});
 
 const props = defineProps({
   postId: {
     type: [Number, String],
-    required: true
+    required: true,
   }
 });
 const router = useRouter();
@@ -23,9 +24,15 @@ axios.get(`/api/posts/${props.postId}`).then((res) => {
 });
 
 const edit = () =>{
-  axios.patch(`/api/posts/${props.postId}`,post.value).then(()=>{
-    router.replace({name: "home"})
-  });
+  axios.patch(`/api/posts/${props.postId}`, post.value).then(() => {
+    router.replace({ name: 'home' });
+  }).catch((err) => {
+    if (err.response && err.response.data && err.response.data.validation) {
+      errors.value = err.response.data.validation;
+    } else {
+      alert('An error occurred. Please try again.');
+    }
+  });;
 }
 const options = [
   {
@@ -45,6 +52,7 @@ const options = [
 <template>
   <div>
     <el-input v-model="post.title"/>
+    <el-text v-if="errors.title" class="mx-1" type="danger" size='small'>{{ errors.title }}</el-text>
   </div>
   <div class="mt-2">
     <el-select
@@ -60,9 +68,12 @@ const options = [
           :value="item.value"
       />
     </el-select>
+    <el-text v-if="errors.category" class="mx-1" type="danger" size='small'>{{ errors.category }}</el-text>
+
   </div>
   <div class="mt-2">
     <el-input v-model="post.content" type="textarea" rows="15"/>
+    <el-text v-if="errors.content" class="mx-1" type="danger" size='small'>{{ errors.content }}</el-text>
   </div>
   <div class="mt-2">
     <el-button type="warning" @click="edit()">수정완료</el-button>
