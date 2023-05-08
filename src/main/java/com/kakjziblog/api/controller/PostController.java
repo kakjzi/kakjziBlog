@@ -2,8 +2,6 @@ package com.kakjziblog.api.controller;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,6 +17,7 @@ import com.kakjziblog.api.request.PostSearch;
 import com.kakjziblog.api.response.PostResponse;
 import com.kakjziblog.api.service.PostService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,11 +1,10 @@
 package com.kakjziblog.api.request;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import com.kakjziblog.api.domain.Category;
 import com.kakjziblog.api.exception.InvalidRequest;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
