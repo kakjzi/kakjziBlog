@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kakjziblog.api.config.data.UserSession;
 import com.kakjziblog.api.request.PostCreate;
 import com.kakjziblog.api.request.PostEdit;
 import com.kakjziblog.api.request.PostSearch;
@@ -30,20 +29,12 @@ public class PostController {
 
     private final PostService postService;
 
-    @GetMapping("/foo")
-    public Long foo(UserSession userSession) {
-        log.info(">> foo");
-        return userSession.id;
-    }
-
     @PostMapping("/posts")
     public void post(@RequestBody @Valid PostCreate request) {
 
         request.validate();
         postService.write(request);
     }
-
-
     /**
      * /posts -> 글 전체 조회(검색 + 페이징)
      * /posts/{postId} -> 글 한개만 조회

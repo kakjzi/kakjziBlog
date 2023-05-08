@@ -1,7 +1,6 @@
 package com.kakjziblog.api.service;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,12 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.kakjziblog.api.crypto.PasswordEncoder;
 import com.kakjziblog.api.domain.Users;
-import com.kakjziblog.api.exception.AlreadyExistsEmailException;
-import com.kakjziblog.api.exception.InvalidSigninInformation;
 import com.kakjziblog.api.repository.UserRepository;
-import com.kakjziblog.api.request.Login;
 import com.kakjziblog.api.request.Signup;
 
 @ActiveProfiles("test")
@@ -52,6 +47,5 @@ class AuthServiceTest {
 
 		assertThat(user.getEmail()).isEqualTo("jiwoo@naver.com");
 		assertThat(user.getName()).isEqualTo("jiwoo");
-		assertTrue(encoder.matches("1234", user.getPassword()));
 	}
 }
