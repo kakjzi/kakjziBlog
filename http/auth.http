@@ -1,11 +1,21 @@
+### 회원가입
+
+POST http://localhost:8080/auth/signup
+Content-Type: application/json
+
+{
+      "name": "jiwoo",
+      "password": "1234",
+      "email": "jiwoo@naver.com"
+}
+
 ### 로그인
 POST http://localhost:8080/auth/login
 Content-Type: application/x-www-form-urlencoded
 
-username=jiwoo&password=1234&remember=1
+username=jiwoo@naver.com&password=1234&remember=1
 
 ### 메인 페이지
-
 GET http://localhost:8080/
 
 ### 인증 페이지 요청

@@ -1,5 +1,6 @@
 package com.kakjziblog.api.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.kakjziblog.api.domain.Users;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthService {
 	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
 
 	public void signup(Signup signup) {
 		userRepository.findByEmail(signup.getEmail())
@@ -20,10 +22,12 @@ public class AuthService {
 				throw new AlreadyExistsEmailException();
 			});
 
+		String encryptedPassword = passwordEncoder.encode(signup.getPassword());
+
 		Users users = Users.builder()
 						   .email(signup.getEmail())
 						   .name(signup.getName())
-						   .password(signup.getPassword())
+						   .password(encryptedPassword)
 						   .build();
 
 		userRepository.save(users);
