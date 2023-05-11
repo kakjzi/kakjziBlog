@@ -33,21 +33,25 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		return http
-			.authorizeHttpRequests()
-				   .requestMatchers("/auth/login").permitAll()
-				   .anyRequest().authenticated()
-			.and()
-			.formLogin()
-				.loginPage("/auth/login")
-				.loginProcessingUrl("/auth/login")
-				.usernameParameter("username")
-				.passwordParameter("password")
-				.defaultSuccessUrl("/")
-			.and()
-			.userDetailsService(userDetailsService())
-			.csrf(AbstractHttpConfigurer::disable)
-			.build();
+		return http.authorizeHttpRequests()
+				   .requestMatchers("/auth/login")
+				   .permitAll()
+				   .anyRequest()
+				   .authenticated()
+				   .and()
+				   .formLogin()
+				   .loginPage("/auth/login")
+				   .loginProcessingUrl("/auth/login")
+				   .usernameParameter("username")
+				   .passwordParameter("password")
+				   .defaultSuccessUrl("/")
+				   .and()
+				   .rememberMe(rm -> rm.rememberMeParameter("remember")
+									   .alwaysRemember(false)
+									   .tokenValiditySeconds(2592000))
+				   .userDetailsService(userDetailsService())
+				   .csrf(AbstractHttpConfigurer::disable)
+				   .build();
 	}
 
 	@Bean
