@@ -15,16 +15,26 @@ import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kakjziblog.api.config.handler.Http401Handler;
+import com.kakjziblog.api.config.handler.Http403Handler;
+import com.kakjziblog.api.config.handler.LoginFailHandler;
 import com.kakjziblog.api.domain.Users;
 import com.kakjziblog.api.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Spring 6 부터는 Bean 주입 방식으로 변경됨
  */
 @Configuration
 @EnableWebSecurity(debug = true)
+@Slf4j
+@RequiredArgsConstructor
 public class SecurityConfig {
 
+	private final ObjectMapper objectMapper;
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
 		return web -> web.ignoring()
@@ -35,20 +45,29 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http.authorizeHttpRequests()
-				   .requestMatchers("/auth/login").permitAll()
-				   .requestMatchers("/auth/signup").permitAll()
-				   .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
+				   .requestMatchers("/auth/login")
+				   .permitAll()
+				   .requestMatchers("/auth/signup")
+				   .permitAll()
+				   .requestMatchers("/user")
+				   .hasAnyRole("USER", "ADMIN")
 				   .requestMatchers("/admin")
-			.access(new WebExpressionAuthorizationManager("hasRole('ADMIN') and hasAuthority('WRITE')"))
-				   .anyRequest().authenticated()
+				   .access(new WebExpressionAuthorizationManager("hasRole('ADMIN') and hasAuthority('WRITE')"))
+				   .anyRequest()
+				   .authenticated()
 				   .and()
 				   .formLogin()
-				   .loginPage("/auth/login")
-				   .loginProcessingUrl("/auth/login")
-				   .usernameParameter("username")
-				   .passwordParameter("password")
-				   .defaultSuccessUrl("/")
+					   .loginPage("/auth/login")
+					   .loginProcessingUrl("/auth/login")
+					   .usernameParameter("username")
+					   .passwordParameter("password")
+					   .defaultSuccessUrl("/")
+						.failureHandler(new LoginFailHandler(objectMapper))
 				   .and()
+				   .exceptionHandling(e -> {
+					   e.accessDeniedHandler(new Http403Handler(objectMapper));
+					   e.authenticationEntryPoint(new Http401Handler(objectMapper));
+				   })
 				   .rememberMe(rm -> rm.rememberMeParameter("remember")
 									   .alwaysRemember(false)
 									   .tokenValiditySeconds(2592000))
