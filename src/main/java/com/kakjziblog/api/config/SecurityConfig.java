@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -16,8 +17,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
@@ -27,6 +26,7 @@ import com.kakjziblog.api.config.filter.EmailPasswordAuthFilter;
 import com.kakjziblog.api.config.handler.Http401Handler;
 import com.kakjziblog.api.config.handler.Http403Handler;
 import com.kakjziblog.api.config.handler.LoginFailHandler;
+import com.kakjziblog.api.config.handler.LoginSuccessHandler;
 import com.kakjziblog.api.domain.Users;
 import com.kakjziblog.api.repository.UserRepository;
 
@@ -38,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Configuration
 @EnableWebSecurity(debug = true)
+@EnableMethodSecurity
 @Slf4j
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -55,16 +56,7 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http.authorizeHttpRequests()
-				   .requestMatchers("/auth/login")
-				   .permitAll()
-				   .requestMatchers("/auth/signup")
-				   .permitAll()
-				   .requestMatchers("/user")
-				   .hasAnyRole("USER", "ADMIN")
-				   .requestMatchers("/admin")
-				   .access(new WebExpressionAuthorizationManager("hasRole('ADMIN') and hasAuthority('WRITE')"))
-				   .anyRequest()
-				   .authenticated()
+				   .anyRequest().permitAll()
 				   .and()
 				   .addFilterBefore(emailPasswordAuthFilter(), UsernamePasswordAuthenticationFilter.class)
 				   .exceptionHandling(e -> {
@@ -82,7 +74,7 @@ public class SecurityConfig {
 	public EmailPasswordAuthFilter emailPasswordAuthFilter(){
 		EmailPasswordAuthFilter filter = new EmailPasswordAuthFilter("/auth/login", objectMapper);
 		filter.setAuthenticationManager(authenticationManager());
-		filter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/"));
+		filter.setAuthenticationSuccessHandler(new LoginSuccessHandler(objectMapper));
 		filter.setAuthenticationFailureHandler(new LoginFailHandler(objectMapper));
 		filter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
 
