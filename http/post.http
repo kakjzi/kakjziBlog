@@ -1,4 +1,9 @@
-### 테스트 요청
-GET http://localhost:8080/foo
+###  게시글 작성
+POST http://localhost:8080/posts
 Content-Type: application/json
-Authorization: asdf
+
+{
+  "title": "제목",
+  "content": "내용",
+  "category": "개발"
+}

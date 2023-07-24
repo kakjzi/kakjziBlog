@@ -2,6 +2,7 @@ package com.kakjziblog.api.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -28,6 +29,7 @@ public class PostController {
 
     private final PostService postService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/posts")
     public void post(@RequestBody @Valid PostCreate request) {
 
@@ -52,11 +54,12 @@ public class PostController {
     public List<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
         return postService.getList(postSearch);
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping("/posts/{postId}")
     public void edit(@PathVariable Long postId, @RequestBody @Valid PostEdit postEdit) {
         postService.edit(postId, postEdit);
     }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/posts/{postId}")
     public void edit(@PathVariable Long postId) {
         postService.delete(postId);
