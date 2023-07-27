@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,6 +47,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "jiwoo12@naver.com", roles = {"ADMIN"})
     @DisplayName("/posts 요청시 Hello World 를 출력합니다")
     void test() throws Exception {
         //given
@@ -92,7 +94,8 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("/posts 요청시 DB에 값이 저장된다.")
+    @WithMockUser(username = "jiwoo12@naver.com", roles = {"ADMIN"})
+    @DisplayName("글 작성")
     void test3() throws Exception {
         //when
         mockMvc.perform(post("/posts")
@@ -182,6 +185,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "jiwoo12@naver.com", roles = {"ADMIN"})
     @DisplayName("게시글 제목 수정")
     void test7() throws Exception {
         //given
@@ -208,6 +212,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "jiwoo12@naver.com", roles = {"ADMIN"})
     @DisplayName("게시글 삭제")
     void test8() throws Exception {
         //given
@@ -227,10 +232,11 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "jiwoo12@naver.com", roles = {"ADMIN"})
     @DisplayName("존재하지않는 게시글 조회")
     void test9() throws Exception {
         //expected
-        mockMvc.perform(delete("/posts/{postId}", 1L)
+        mockMvc.perform(get("/posts/{postId}", 1L)
                         .contentType(APPLICATION_JSON)
                 )
                 .andExpect(status().isNotFound())
@@ -238,6 +244,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "jiwoo12@naver.com", roles = {"ADMIN"})
     @DisplayName("존재하지않는 게시글 수정")
     void test10() throws Exception {
         //given
@@ -256,6 +263,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "jiwoo12@naver.com", roles = {"ADMIN"})
     @DisplayName("Title에 '바보'는 제외 해야하는 정책")
     void test11() throws Exception {
         //given

@@ -64,6 +64,7 @@ public class PostControllerDocTest {
                 ));
     }
     @Test
+
     @DisplayName("글 등록")
     void test2() throws Exception {
 
