@@ -33,6 +33,7 @@ public class PostService {
                                     .orElseThrow(UserNotFound::new);
 
         Post post = Post.builder()
+                        .user(user)
                         .title(postCreate.getTitle())
                         .content(postCreate.getContent())
                         .category(postCreate.getCategory())
