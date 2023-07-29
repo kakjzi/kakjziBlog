@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kakjziblog.api.domain.Post;
 import com.kakjziblog.api.domain.PostEditor;
 import com.kakjziblog.api.exception.PostNotFound;
+import com.kakjziblog.api.exception.UserNotFound;
 import com.kakjziblog.api.repository.PostRepository;
+import com.kakjziblog.api.repository.UserRepository;
 import com.kakjziblog.api.request.PostCreate;
 import com.kakjziblog.api.request.PostEdit;
 import com.kakjziblog.api.request.PostSearch;
@@ -23,9 +25,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PostService {
 
+    private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    public void write(PostCreate postCreate){
+    public void write(Long userId, PostCreate postCreate) {
+        var user = userRepository.findById(userId)
+                                    .orElseThrow(UserNotFound::new);
+
         Post post = Post.builder()
                         .title(postCreate.getTitle())
                         .content(postCreate.getContent())

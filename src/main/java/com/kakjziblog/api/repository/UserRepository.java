@@ -4,10 +4,10 @@ import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.kakjziblog.api.domain.Users;
+import com.kakjziblog.api.domain.User;
 
-public interface UserRepository extends CrudRepository<Users, Long> {
+public interface UserRepository extends CrudRepository<User, Long> {
 
-	Optional<Users> findByEmailAndPassword(String email, String password);
-	Optional<Users> findByEmail(String email);
+	Optional<User> findByEmailAndPassword(String email, String password);
+	Optional<User> findByEmail(String email);
 }

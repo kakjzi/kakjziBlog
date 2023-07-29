@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -27,7 +26,7 @@ import com.kakjziblog.api.config.handler.Http401Handler;
 import com.kakjziblog.api.config.handler.Http403Handler;
 import com.kakjziblog.api.config.handler.LoginFailHandler;
 import com.kakjziblog.api.config.handler.LoginSuccessHandler;
-import com.kakjziblog.api.domain.Users;
+import com.kakjziblog.api.domain.User;
 import com.kakjziblog.api.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -38,7 +37,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Configuration
 @EnableWebSecurity(debug = true)
-@EnableMethodSecurity
 @Slf4j
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -97,9 +95,9 @@ public class SecurityConfig {
 	@Bean
 	public UserDetailsService userDetailsService(UserRepository userRepository) {
 		return username -> {
-			Users users = userRepository.findByEmail(username)
-										.orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-			return new UserPrincipal(users);
+			User user = userRepository.findByEmail(username)
+									  .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+			return new UserPrincipal(user);
 		};
 	}
 

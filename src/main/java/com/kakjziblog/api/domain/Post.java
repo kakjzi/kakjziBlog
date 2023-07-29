@@ -1,5 +1,9 @@
 package com.kakjziblog.api.domain;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.kakjziblog.api.domain.common.CommonEntity;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
@@ -7,12 +11,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
-
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.kakjziblog.api.domain.common.CommonEntity;
-
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,14 +33,19 @@ public class Post extends CommonEntity {
     @Lob
     private String content;
 
+    @ManyToOne
+    @JoinColumn
+    private User user;
+
     @Enumerated(EnumType.STRING)
     private Category category;
     private Long commentId;
 
     @Builder
-    public Post(String title, String content, Category category, Long commentId) {
+    public Post(String title, String content, User user, Category category, Long commentId) {
         this.title = title;
         this.content = content;
+        this.user = user;
         this.category = category;
         this.commentId = commentId;
     }

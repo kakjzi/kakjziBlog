@@ -15,7 +15,7 @@ Content-Type: application/json
 #
 #username=jiwoo@naver.com&password=1234&remember=1
 
-### Form 방식 로그인
+### 로그인
 POST http://localhost:8080/auth/login
 Content-Type: application/json
 
