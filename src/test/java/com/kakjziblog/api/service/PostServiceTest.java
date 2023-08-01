@@ -18,8 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.kakjziblog.api.domain.Post;
+import com.kakjziblog.api.domain.User;
 import com.kakjziblog.api.exception.PostNotFound;
 import com.kakjziblog.api.repository.PostRepository;
+import com.kakjziblog.api.repository.UserRepository;
 import com.kakjziblog.api.request.PostCreate;
 import com.kakjziblog.api.request.PostEdit;
 import com.kakjziblog.api.request.PostSearch;
@@ -31,23 +33,32 @@ class PostServiceTest {
 	@Autowired private PostService postService;
 
 	@Autowired private PostRepository postRepository;
+	@Autowired private UserRepository userRepository;
 
 	@BeforeEach
 	void clean() {
 		postRepository.deleteAll();
+		userRepository.deleteAll();
 	}
 
 	@Test
 	@DisplayName("글 작성")
 	void test1() {
 		//given
+		var user = User.builder()
+					   .name("신지우")
+					   .email("jiwoo.sin@naver.com")
+					   .password("1234")
+					   .build();
+		userRepository.save(user);
+
         PostCreate postCreate = PostCreate.builder()
                                           .title("제목입니다.")
                                           .content("내용입니다.")
                                           .category(DEVELOP)
                                           .build();
 		//when
-		postService.write(postCreate);
+		postService.write(user.getId(), postCreate);
 
 		//then
 		assertEquals(1L, postRepository.count());
@@ -258,6 +269,14 @@ class PostServiceTest {
 	@DisplayName("게시물 생성 시간")
 	void test12() {
 		//given
+		var user = User.builder()
+					   .name("신지우")
+					   .email("jiwoo.sin@naver.com")
+					   .password("1234")
+					   .build();
+
+		userRepository.save(user);
+
 		LocalDateTime now = LocalDateTime.now();
 		PostCreate postCreate = PostCreate.builder()
 										  .title("제목입니다.")
@@ -265,7 +284,7 @@ class PostServiceTest {
 										  .category(DEVELOP)
 										  .build();
 		//when
-		postService.write(postCreate);
+		postService.write(user.getId(), postCreate);
 
 		//then
 		Post post = postRepository.findAll()

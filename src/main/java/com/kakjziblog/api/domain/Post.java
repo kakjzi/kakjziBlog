@@ -62,4 +62,8 @@ public class Post extends CommonEntity {
         this.content = postEditor.getContent();
         this.category = postEditor.getCategory();
     }
+
+    public Long getUserId() {
+        return this.user.getId();
+    }
 }

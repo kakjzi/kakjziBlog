@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.kakjziblog.api.domain.Users;
+import com.kakjziblog.api.domain.User;
 import com.kakjziblog.api.repository.UserRepository;
 import com.kakjziblog.api.request.Signup;
 
@@ -41,9 +41,9 @@ class AuthServiceTest {
 		//then
 		assertThat(userRepository.count()).isEqualTo(1);
 
-		Users user = userRepository.findAll()
-								   .iterator()
-								   .next();
+		User user = userRepository.findAll()
+								  .iterator()
+								  .next();
 
 		assertThat(user.getEmail()).isEqualTo("jiwoo@naver.com");
 		assertThat(user.getName()).isEqualTo("jiwoo");

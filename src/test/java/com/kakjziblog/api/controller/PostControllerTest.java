@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +21,12 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kakjziblog.api.config.KakjziMockUser;
 import com.kakjziblog.api.domain.Category;
 import com.kakjziblog.api.domain.Post;
+import com.kakjziblog.api.domain.User;
 import com.kakjziblog.api.repository.PostRepository;
+import com.kakjziblog.api.repository.UserRepository;
 import com.kakjziblog.api.request.PostCreate;
 import com.kakjziblog.api.request.PostEdit;
 
@@ -41,13 +44,17 @@ class PostControllerTest {
     @Autowired
     private PostRepository postRepository;
 
-    @BeforeEach
+    @Autowired
+    private UserRepository userRepository;
+
+    @AfterEach
     void clean(){
+        userRepository.deleteAll();
         postRepository.deleteAll();
     }
 
     @Test
-    @WithMockUser(username = "jiwoo12@naver.com", roles = {"ADMIN"})
+    @KakjziMockUser
     @DisplayName("/posts 요청시 Hello World 를 출력합니다")
     void test() throws Exception {
         //given
@@ -94,20 +101,21 @@ class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "jiwoo12@naver.com", roles = {"ADMIN"})
+    @KakjziMockUser
+    // @WithMockUser(username = "jiwoo12@naver.com", roles = {"ADMIN"})
     @DisplayName("글 작성")
     void test3() throws Exception {
         //when
-        mockMvc.perform(post("/posts")
-                        .contentType(APPLICATION_JSON)
-                       .content("{\"title\": \"제목입니다.\", \"content\": \"내용입니다.\", \"category\": \"개발\"}")
-                )
-                .andExpect(status().isOk())
-                .andDo(print());
+        mockMvc.perform(post("/posts").contentType(APPLICATION_JSON)
+                                      .content(
+                                          "{\"title\": \"제목입니다.\", \"content\": \"내용입니다.\", \"category\": \"개발\"}"))
+               .andExpect(status().isOk())
+               .andDo(print());
         //then
         assertEquals(1L, postRepository.count());
 
-        Post post = postRepository.findAll().get(0);
+        Post post = postRepository.findAll()
+                                  .get(0);
         assertEquals("제목입니다.", post.getTitle());
         assertEquals("내용입니다.", post.getContent());
         assertEquals(DEVELOP, post.getCategory());
@@ -212,15 +220,20 @@ class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "jiwoo12@naver.com", roles = {"ADMIN"})
+    @KakjziMockUser
     @DisplayName("게시글 삭제")
     void test8() throws Exception {
         //given
+        User user = userRepository.findAll()
+                                  .get(0);
+
         Post post = Post.builder()
                         .title("지우")
                         .content("모닝")
+                        .user(user)
                         .category(Category.DEVELOP)
                         .build();
+
         postRepository.save(post);
 
         //expected
