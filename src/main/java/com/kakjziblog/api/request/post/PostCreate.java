@@ -1,4 +1,4 @@
-package com.kakjziblog.api.request;
+package com.kakjziblog.api.request.post;
 
 import com.kakjziblog.api.domain.Category;
 import com.kakjziblog.api.exception.InvalidRequest;

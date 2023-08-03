@@ -1,7 +1,7 @@
-package com.kakjziblog.api.repository;
+package com.kakjziblog.api.repository.post;
 
 import com.kakjziblog.api.domain.Post;
-import com.kakjziblog.api.request.PostSearch;
+import com.kakjziblog.api.request.post.PostSearch;
 
 import java.util.List;
 

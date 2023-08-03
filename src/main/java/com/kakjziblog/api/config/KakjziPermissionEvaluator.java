@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 
 import com.kakjziblog.api.domain.Post;
 import com.kakjziblog.api.exception.PostNotFound;
-import com.kakjziblog.api.repository.PostRepository;
+import com.kakjziblog.api.repository.post.PostRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

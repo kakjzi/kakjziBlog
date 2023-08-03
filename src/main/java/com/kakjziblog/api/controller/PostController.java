@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kakjziblog.api.config.UserPrincipal;
-import com.kakjziblog.api.request.PostCreate;
-import com.kakjziblog.api.request.PostEdit;
-import com.kakjziblog.api.request.PostSearch;
+import com.kakjziblog.api.request.post.PostCreate;
+import com.kakjziblog.api.request.post.PostEdit;
+import com.kakjziblog.api.request.post.PostSearch;
 import com.kakjziblog.api.response.PostResponse;
 import com.kakjziblog.api.service.PostService;
 

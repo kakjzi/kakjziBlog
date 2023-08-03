@@ -10,11 +10,11 @@ import com.kakjziblog.api.domain.Post;
 import com.kakjziblog.api.domain.PostEditor;
 import com.kakjziblog.api.exception.PostNotFound;
 import com.kakjziblog.api.exception.UserNotFound;
-import com.kakjziblog.api.repository.PostRepository;
+import com.kakjziblog.api.repository.post.PostRepository;
 import com.kakjziblog.api.repository.UserRepository;
-import com.kakjziblog.api.request.PostCreate;
-import com.kakjziblog.api.request.PostEdit;
-import com.kakjziblog.api.request.PostSearch;
+import com.kakjziblog.api.request.post.PostCreate;
+import com.kakjziblog.api.request.post.PostEdit;
+import com.kakjziblog.api.request.post.PostSearch;
 import com.kakjziblog.api.response.PostResponse;
 
 import lombok.RequiredArgsConstructor;

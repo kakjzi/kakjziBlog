@@ -26,9 +26,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kakjziblog.api.config.KakjziMockUser;
 import com.kakjziblog.api.domain.Category;
 import com.kakjziblog.api.domain.Post;
-import com.kakjziblog.api.repository.PostRepository;
+import com.kakjziblog.api.repository.post.PostRepository;
 import com.kakjziblog.api.repository.UserRepository;
-import com.kakjziblog.api.request.PostCreate;
+import com.kakjziblog.api.request.post.PostCreate;
 
 @SpringBootTest
 @AutoConfigureMockMvc

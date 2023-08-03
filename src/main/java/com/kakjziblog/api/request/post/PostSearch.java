@@ -1,4 +1,4 @@
-package com.kakjziblog.api.request;
+package com.kakjziblog.api.request.post;
 
 import static java.lang.Math.*;
 

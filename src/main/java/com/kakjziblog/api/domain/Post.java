@@ -1,9 +1,12 @@
 package com.kakjziblog.api.domain;
 
+import java.util.List;
+
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.kakjziblog.api.domain.common.CommonEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
@@ -14,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,6 +45,9 @@ public class Post extends CommonEntity {
     private Category category;
     private Long commentId;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    private List<Comment> comment;
+
     @Builder
     public Post(String title, String content, User user, Category category, Long commentId) {
         this.title = title;
@@ -65,5 +72,10 @@ public class Post extends CommonEntity {
 
     public Long getUserId() {
         return this.user.getId();
+    }
+
+    public void addComment(Comment comment) {
+        comment.setPost(this);
+        this.comment.add(comment);
     }
 }
