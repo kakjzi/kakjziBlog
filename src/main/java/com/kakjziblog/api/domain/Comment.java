@@ -43,11 +43,10 @@ public class Comment extends CommonEntity {
 	private Post post;
 
 	@Builder
-	public Comment(String author, String password, String content, Post post) {
+	public Comment(String author, String password, String content) {
 		this.author = author;
 		this.password = password;
 		this.content = content;
-		this.post = post;
 	}
 
 	public void setPost(Post post) {

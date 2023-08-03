@@ -18,7 +18,6 @@ import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kakjziblog.api.config.KakjziMockUser;
 import com.kakjziblog.api.domain.Comment;
 import com.kakjziblog.api.domain.Post;
 import com.kakjziblog.api.domain.User;
@@ -26,6 +25,7 @@ import com.kakjziblog.api.repository.UserRepository;
 import com.kakjziblog.api.repository.comment.CommentRepository;
 import com.kakjziblog.api.repository.post.PostRepository;
 import com.kakjziblog.api.request.comment.CommentCreate;
+import com.kakjziblog.api.request.comment.CommentDelete;
 
 //@WebMvcTest
 @SpringBootTest
@@ -55,7 +55,6 @@ class CommentControllerTest {
     }
 
     @Test
-    @KakjziMockUser
     @DisplayName("댓글 작성")
     void test1() throws Exception {
 
@@ -99,5 +98,46 @@ class CommentControllerTest {
         boolean isMatch = passwordEncoder.matches("123456", comment.getPassword());
         assertThat(isMatch).isTrue();
         assertThat(comment.getContent()).isEqualTo("댓글 테스트입니다. 아아아아 10글자 제한입니다.");
+    }
+
+    @Test
+    @DisplayName("댓글 삭제")
+    void test2() throws Exception {
+
+        PasswordEncoder passwordEncoder = new SCryptPasswordEncoder(16, 8, 1, 32, 62);
+        //given
+        User user = User.builder()
+                        .email("jiwoo.sin@naver.com")
+                        .name("신지우1")
+                        .password("1234")
+                        .build();
+        userRepository.save(user);
+
+        Post post = Post.builder()
+                        .title("123456789012345")
+                        .content("테스트입니다.")
+                        .category(DEVELOP)
+                        .build();
+        postRepository.save(post);
+
+        String encodedPassword = passwordEncoder.encode("123456");
+
+        Comment comment = Comment.builder()
+                                 .author("신지우")
+                                 .password(encodedPassword)
+                                 .content("으하하하하하하하하하하하하 10글자 제한입니다.")
+                                 .build();
+        comment.setPost(post);
+        commentRepository.save(comment);
+
+        CommentDelete request = new CommentDelete("123456");
+        String json = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(post("/comments/{commentId}/delete", comment.getId())
+                   .contentType(MediaType.APPLICATION_JSON_VALUE)
+                   .content(json))
+               .andDo(print())
+               .andExpect(status().isOk());
+
     }
 }

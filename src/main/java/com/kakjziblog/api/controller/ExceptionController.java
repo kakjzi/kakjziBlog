@@ -1,8 +1,5 @@
 package com.kakjziblog.api.controller;
 
-import com.kakjziblog.api.exception.KakjziblogException;
-import com.kakjziblog.api.response.ErrorResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -11,6 +8,11 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import com.kakjziblog.api.exception.KakjziblogException;
+import com.kakjziblog.api.response.ErrorResponse;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ControllerAdvice
@@ -65,4 +67,18 @@ public class ExceptionController {
 
     // exception 이 추가될때마다 여기다가 추가하기에는 너무 많이 늘어나게 된다.
     // -> 상위 exception 을 만들자
+
+    @ResponseBody
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> exception(Exception e) {
+        log.error("Exception", e);
+
+        ErrorResponse body = ErrorResponse.builder()
+                .code("500")
+                .message(e.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(body);
+    }
 }
