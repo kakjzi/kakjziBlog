@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 		@Index(name = "idx_comment_post_id", columnList = "post_id"),
 	}
 )
+@Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class Comment extends CommonEntity {
 	@Id

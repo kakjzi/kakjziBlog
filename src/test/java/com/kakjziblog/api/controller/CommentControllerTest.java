@@ -1,6 +1,7 @@
 package com.kakjziblog.api.controller;
 
 import static com.kakjziblog.api.domain.Category.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kakjziblog.api.config.KakjziMockUser;
+import com.kakjziblog.api.domain.Comment;
 import com.kakjziblog.api.domain.Post;
 import com.kakjziblog.api.domain.User;
 import com.kakjziblog.api.repository.UserRepository;
@@ -78,15 +80,18 @@ class CommentControllerTest {
 
         String json = objectMapper.writeValueAsString(request);
 
-        //when
+        //expected
         mockMvc.perform(post("/posts/{postId}/comments", post.getId())
                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                    .content(json))
                .andDo(print())
                .andExpect(status().isOk());
+        assertThat(commentRepository.count()).isEqualTo(1L);
 
-        //then
-
+        Comment comment = commentRepository.findAll()
+                                           .get(0);
+        assertThat(comment.getAuthor()).isEqualTo("신지우");
+        assertThat(comment.getPassword()).isEqualTo("123456");
+        assertThat(comment.getContent()).isEqualTo("댓글 테스트입니다. 아아아아 10글자 제한입니다.");
     }
-
 }
