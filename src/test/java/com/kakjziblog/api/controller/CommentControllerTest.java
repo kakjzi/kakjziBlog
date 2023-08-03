@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,6 +58,8 @@ class CommentControllerTest {
     @KakjziMockUser
     @DisplayName("댓글 작성")
     void test1() throws Exception {
+
+        PasswordEncoder passwordEncoder = new SCryptPasswordEncoder(16, 8, 1, 32, 62);
         //given
         User user = User.builder()
                         .email("jiwoo.sin@naver.com")
@@ -91,7 +95,9 @@ class CommentControllerTest {
         Comment comment = commentRepository.findAll()
                                            .get(0);
         assertThat(comment.getAuthor()).isEqualTo("신지우");
-        assertThat(comment.getPassword()).isEqualTo("123456");
+        assertThat(comment.getPassword()).isNotEqualTo("123456");
+        boolean isMatch = passwordEncoder.matches("123456", comment.getPassword());
+        assertThat(isMatch).isTrue();
         assertThat(comment.getContent()).isEqualTo("댓글 테스트입니다. 아아아아 10글자 제한입니다.");
     }
 }

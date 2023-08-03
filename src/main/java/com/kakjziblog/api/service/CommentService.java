@@ -1,5 +1,6 @@
 package com.kakjziblog.api.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,14 +17,19 @@ import lombok.RequiredArgsConstructor;
 public class CommentService {
 	private final PostRepository postRepository;
 	private final CommentRepository commentRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
 	@Transactional
 	public void write(Long postId, CommentCreate request) {
 		Post post = postRepository.findById(postId)
 								  .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+
+		String encodedPassword = passwordEncoder.encode(request.getPassword());
+
 		Comment comment = Comment.builder()
 								 .author(request.getAuthor())
-								 .password(request.getPassword())
+								 .password(encodedPassword)
 								 .content(request.getContent())
 								 .build();
 
